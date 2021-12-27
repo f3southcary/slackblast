@@ -212,22 +212,6 @@ async def command(ack, body, respond, client, logger):
     blocks = [
         {
             "type": "input",
-            "block_id": "title",
-            "element": {
-                "type": "plain_text_input",
-                "action_id": "title",
-                "placeholder": {
-                    "type": "plain_text",
-                    "text": "Snarky Title?"
-                }
-            },
-            "label": {
-                "type": "plain_text",
-                "text": "Title"
-            }
-        },
-        {
-            "type": "input",
             "block_id": "the_ao",
             "element": {
                 "type": "channels_select",
@@ -339,7 +323,6 @@ async def command(ack, body, respond, client, logger):
                 "type": "plain_text_input",
                 "multiline": True,
                 "action_id": "plain_text_input-action",
-                "initial_value": "WARMUP: \nTHE THANG: \nMARY: \nANNOUNCEMENTS: \nCOT: ",
                 "placeholder": {
                     "type": "plain_text",
                     "text": "Tell us what happened\n\n"
@@ -347,29 +330,8 @@ async def command(ack, body, respond, client, logger):
             },
             "label": {
                 "type": "plain_text",
-                "text": "The Moleskine",
+                "text": "Summary",
                 "emoji": True
-            }
-        },
-        {
-            "type": "divider"
-        },
-        {
-            "type": "section",
-            "block_id": "destination",
-            "text": {
-                "type": "plain_text",
-                "text": "Choose where to post this"
-            },
-            "accessory": {
-                "action_id": "destination-action",
-                "type": "static_select",
-                "placeholder": {
-                    "type": "plain_text",
-                    "text": "Choose where"
-                },
-                "initial_option": initial_channel_option,
-                "options": channel_options
             }
         }
     ]
@@ -400,7 +362,7 @@ async def command(ack, body, respond, client, logger):
             "callback_id": "backblast-id",
             "title": {
                 "type": "plain_text",
-                "text": "Create a Backblast"
+                "text": "F3 South Cary Backblast"
             },
             "submit": {
                 "type": "plain_text",
@@ -416,7 +378,6 @@ async def command(ack, body, respond, client, logger):
 async def view_submission(ack, body, logger, client):
     await ack()
     result = body["view"]["state"]["values"]
-    title = result["title"]["title"]["value"]
     date = result["date"]["datepicker-action"]["selected_date"]
     the_ao = result["the_ao"]["channels_select-action"]["selected_channel"]
     the_q = result["the_q"]["users_select-action"]["selected_user"]
@@ -424,20 +385,21 @@ async def view_submission(ack, body, logger, client):
     fngs = result["fngs"]["fng-action"]["value"]
     count = result["count"]["count-action"]["value"]
     moleskine = result["moleskine"]["plain_text_input-action"]["value"]
-    destination = result["destination"]["destination-action"]["selected_option"]["value"]
+    #destination = result["destination"]["destination-action"]["selected_option"]["value"]
     email_to = safeget(result, "email", "email-action", "value")
     the_date = result["date"]["datepicker-action"]["selected_date"]
+    chan_1stf = config('FIRST_F_CHANNEL_ID', default='')
 
     pax_formatted = await get_pax(pax)
 
     logger.info(result)
 
-    chan = destination
-    if chan == 'THE_AO':
-        chan = the_ao
+    #chan = destination
+    #if chan == 'THE_AO':
+    #    chan = the_ao
 
-    logger.info('Channel to post to will be {} because the selected destination value was {} while the selected AO in the modal was {}'.format(
-        chan, destination, the_ao))
+    #logger.info('Channel to post to will be {} because the selected destination value was {} while the selected AO in the modal was {}'.format(
+    #    chan, destination, the_ao))
 
     ao_name = await get_channel_name(the_ao, logger, client)
     q_name = (await get_user_names([the_q], logger, client) or [''])[0]
@@ -447,8 +409,7 @@ async def view_submission(ack, body, logger, client):
     try:
         # formatting a message
         # todo: change to use json object
-        header_msg = f"*Slackblast*: "
-        title_msg = f"*" + title + "*"
+        title_msg = f"" + count + " posted at <#" + the_ao + ">"
 
         date_msg = f"*DATE*: " + the_date
         ao_msg = f"*AO*: <#" + the_ao + ">"
@@ -462,14 +423,39 @@ async def view_submission(ack, body, logger, client):
         if config('POST_TO_CHANNEL', cast=bool):
             body = make_body(date_msg, ao_msg, q_msg, pax_msg,
                              fngs_msg, count_msg, moleskine_msg)
-            msg = header_msg + "\n" + title_msg + "\n" + body
-            await client.chat_postMessage(channel=chan, text=msg)
-            logger.info('\nMessage posted to Slack! \n{}'.format(msg))
+            msg = title_msg + "\n" + body
+            
+            logger.info('\nBody = {}\n'.format(body))
+            logger.info('\nResult = {}\n'.format(result))
+            
+            if moleskine_msg.startswith('TESTING:'):
+
+                # Post to self, since the user entered message "testing"
+                await client.chat_postMessage(channel=the_q, text=msg)
+                logger.info('\nThis is a test message, so only sending to self ({})! \n{}.'.format(the_q, msg))
+            
+            else:
+
+                # Post to 1st F Channel, from variable chan_1stf, sourced from the FIRST_F_CHANNEL_ID env config variable.
+                await client.chat_postMessage(channel=the_q, text=msg)
+                logger.info('\nMessage posted to 1st F Channel ({})! \n{}'.format(chan_1stf, msg))
+
+                # Post to AO Channel, the_ao, sourced from user's selection in the form.  Only send here if the 1st F channel
+                # was not selected as the AO (which is sometimes done for unscheduled workouts)
+                if the_ao != chan_1stf:
+                   await client.chat_postMessage(channel=the_q, text=msg)
+                   logger.info('\nMessage posted to AO Channel ({})! \n{}'.format(the_ao, msg))
+
+                else:
+                   logger.info('\nSkipping posting to the AO channel, as the 1st F channel was selected as the AO.\n')
+            
+
+                
     except Exception as slack_bolt_err:
         logger.error('Error with posting Slack message with chat_postMessage: {}'.format(
             slack_bolt_err))
         # Try again and bomb out without attempting to send email
-        await client.chat_postMessage(channel=chan, text='There was an error with your submission: {}'.format(slack_bolt_err))
+        await client.chat_postMessage(channel=the_q, text='There was an error with your submission: {}'.format(slack_bolt_err))
     try:
         if email_to and email_to != OPTIONAL_INPUT_VALUE:
             subject = title
