@@ -432,8 +432,8 @@ async def view_submission(ack, body, logger, client):
         date_msg = f"*DATE*: " + the_date
         ao_msg = f"*AO*: <#" + the_ao + ">"
         q_msg = f"*Q*: <@" + the_q + ">"
-        pax_msg = f"*PAX IN SLACK*: " + pax_formatted
-        pax2_msg = f"*PAX NOT IN SLACK*: " + pax2
+        pax_msg = f"*PAX (in Slack)*: " + pax_formatted
+        pax2_msg = f"*PAX (not in Slack)*: " + pax2
         fngs_msg = f"*FNGs*: " + fngs
         count_msg = f"*COUNT*: " + count
         moleskine_msg = moleskine
