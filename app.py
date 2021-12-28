@@ -292,12 +292,12 @@ async def command(ack, body, respond, client, logger):
                 "initial_value": "None",
                 "placeholder": {
                     "type": "plain_text",
-                    "text": "List the PAX who are not in Slack (separated by commas)"
+                    "text": "List the PAX not in Slack, separated by commas"
                 }
             },
             "label": {
                 "type": "plain_text",
-                "text": "The PAX (not in Slack)"
+                "text": "The PAX (not in Slack) (separated by commas)"
             }
         },
         {
@@ -309,12 +309,12 @@ async def command(ack, body, respond, client, logger):
                 "initial_value": "None",
                 "placeholder": {
                     "type": "plain_text",
-                    "text": "FNGs (separated by commas)"
+                    "text": "List the FNGs, separated by commas"
                 }
             },
             "label": {
                 "type": "plain_text",
-                "text": "FNGs"
+                "text": "FNGs (separated by commas)"
             }
         },
         {
