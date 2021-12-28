@@ -272,15 +272,32 @@ async def command(ack, body, respond, client, logger):
                 "type": "multi_users_select",
                 "placeholder": {
                     "type": "plain_text",
-                    "text": "Tag the PAX",
+                    "text": "Tag the PAX who are in Slack",
                     "emoji": True
                 },
                 "action_id": "multi_users_select-action"
             },
             "label": {
                 "type": "plain_text",
-                "text": "The PAX",
+                "text": "The PAX (in Slack)",
                 "emoji": True
+            }
+        },
+        {
+            "type": "input",
+            "block_id": "the_pax2",
+            "element": {
+                "type": "plain_text_input",
+                "action_id": "pax2-action",
+                "initial_value": "None",
+                "placeholder": {
+                    "type": "plain_text",
+                    "text": "List the PAX who are not in Slack (separated by commas)"
+                }
+            },
+            "label": {
+                "type": "plain_text",
+                "text": "The PAX (not in Slack)"
             }
         },
         {
@@ -292,12 +309,12 @@ async def command(ack, body, respond, client, logger):
                 "initial_value": "None",
                 "placeholder": {
                     "type": "plain_text",
-                    "text": "FNGs"
+                    "text": "FNGs (separated by commas)"
                 }
             },
             "label": {
                 "type": "plain_text",
-                "text": "List untaggable names separated by commas (FNGs, Willy Lomans, etc.)"
+                "text": "FNGs"
             }
         },
         {
