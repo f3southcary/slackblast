@@ -17,7 +17,7 @@ def send(subject, recipient, body):
     msg['From'] = email_user
     msg['To'] = recipient
 
-    logger.info('\nSendmail: Attempting to send email.. (Server={}, Port={}, User={}, To={})\n'.format(email_server, email_server_port, email_user, recipient))
+    logging.info('\nSendmail: Attempting to send email.. (Server={}, Port={}, User={}, To={})\n'.format(email_server, email_server_port, email_user, recipient))
     
     if email_server and email_server_port and email_user and email_password and recipient:
         server = smtplib.SMTP_SSL(email_server, email_server_port)
@@ -26,4 +26,4 @@ def send(subject, recipient, body):
         server.login(email_user, email_password)
         server.send_message(msg)
         server.close()
-        logger.info('\nSendmail: Sent email to: {}\n'.format(recipient))
+        logging.info('\nSendmail: Sent email to: {}\n'.format(recipient))
