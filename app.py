@@ -404,7 +404,8 @@ async def view_submission(ack, body, logger, client):
     count = result["count"]["count-action"]["value"]
     moleskine = result["moleskine"]["plain_text_input-action"]["value"]
     #destination = result["destination"]["destination-action"]["selected_option"]["value"]
-    email_to = safeget(result, "email", "email-action", "value")
+    #email_to = safeget(result, "email", "email-action", "value")
+    email_to = config('EMAIL_TO', default=OPTIONAL_INPUT_VALUE)
     the_date = result["date"]["datepicker-action"]["selected_date"]
     chan_1stf = config('FIRST_F_CHANNEL_ID', default='')
 
