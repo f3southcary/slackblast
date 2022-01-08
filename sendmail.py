@@ -1,3 +1,4 @@
+import logging
 import smtplib
 from email.message import EmailMessage
 from decouple import config
