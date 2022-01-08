@@ -475,8 +475,12 @@ async def view_submission(ack, body, logger, client):
             slack_bolt_err))
         # Try again and bomb out without attempting to send email
         await client.chat_postMessage(channel=the_q, text='There was an error with your submission: {}'.format(slack_bolt_err))
+    
+    logger.info('\nChecking EMAIL_TO configuration: EMAIL_TO=({})\n'.format(email_to))
+
     try:
         if email_to and email_to != OPTIONAL_INPUT_VALUE:
+            logger.info('\nAttempting to send email to: {}\n'.format(email_to))
             subject = title
 
             date_msg = f"DATE: " + the_date
@@ -498,6 +502,7 @@ async def view_submission(ack, body, logger, client):
     except Exception as sendmail_err:
         logger.error('Error with sendmail: {}'.format(sendmail_err))
 
+    logger.info('\nBackblast completed.\n')
 
 def make_body(date, ao, q, pax, pax2, fngs, count, moleskine):
     return date + \
