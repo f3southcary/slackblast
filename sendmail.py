@@ -18,7 +18,9 @@ def send(subject, recipient, body):
 
     if email_server and email_server_port and email_user and email_password and recipient:
         server = smtplib.SMTP_SSL(email_server, email_server_port)
+        server.set_debuglevel(1)
         server.ehlo()
         server.login(email_user, email_password)
         server.send_message(msg)
         server.close()
+        logger.info('\nSendmail: Sent email to: {}\n'.format(recipient))
