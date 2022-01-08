@@ -482,7 +482,7 @@ async def view_submission(ack, body, logger, client):
     try:
         if email_to and email_to != OPTIONAL_INPUT_VALUE:
             logger.info('\nAttempting to send email to: {}\n'.format(email_to))
-            subject = title
+            subject = f"Submitted backblast"
 
             date_msg = f"DATE: " + the_date
             ao_msg = f"AO: " + (ao_name or '').replace('the', '').title()
