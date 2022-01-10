@@ -480,7 +480,7 @@ async def view_submission(ack, body, logger, client):
     logger.info('\nChecking EMAIL_TO configuration: EMAIL_TO=({})\n'.format(email_to))
 
     try:
-        if email_to and email_to != OPTIONAL_INPUT_VALUE:
+        if email_to and email_to != OPTIONAL_INPUT_VALUE and email_to != '':
             logger.info('\nAttempting to send email to: {}\n'.format(email_to))
             subject = f"Submitted backblast"
 
