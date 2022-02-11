@@ -482,24 +482,27 @@ async def view_submission(ack, body, logger, client):
     try:
         if email_to and email_to != OPTIONAL_INPUT_VALUE and email_to != '':
             logger.info('\nAttempting to send email to: {}\n'.format(email_to))
-            subject = f"<" + ao_name + ">: " + the_date + " Q'd by " + q_name
+            subject = f"[backblasts] [" + ao_name + "] " + the_date + " Q'd by " + q_name
 
             tags_msg = f"Tags: " + pax_names
             
             if pax2 != '' and pax2 != 'None':
                 tags_msg = tags_msg + ", " + pax2
-            
-            pax_msg = f"PAX: " + pax_names
-            pax2_msg = f"PAX (not in Slack): " + pax2
-            fngs_msg = f"FNGs: " + fngs
-            count_msg = f"COUNT: " + count
+            if fngs != '' and fngs != 'None':
+                tags_msg = tags_msg + ", " + fngs
+
+            pax_msg = f"<b>PAX:</b> " + pax_names
+            pax2_msg = f"<b>PAX (not in Slack):</b> " + pax2
+            fngs_msg = f"<b>FNGs:</b> " + fngs
+            count_msg = f"<b>COUNT:</b> " + count
             moleskine_msg = moleskine
 
             body_email = tags_msg + "\n" + \
                          pax_msg + "\n" + \
                          pax2_msg + "\n" + \
-                         "<b>" + fngs_msg + "</b>\n" + \
+                         fngs_msg + "\n" + \
                          count_msg + "\n" + \
+                         "\n" + \
                          moleskine_msg
             
             sendmail.send(subject=subject, recipient=email_to, body=body_email)
