@@ -495,9 +495,10 @@ async def view_submission(ack, body, logger, client):
             count_msg = f"COUNT: " + count
             moleskine_msg = moleskine
 
-            body_email = pax_msg + "\n" + \
+            body_email = tags_msg + "\n" + \
+                         pax_msg + "\n" + \
                          pax2_msg + "\n" + \
-                         fngs_msg + "\n" + \
+                         "<b>" + fngs_msg + "</b>\n" + \
                          count_msg + "\n" + \
                          moleskine_msg
             
