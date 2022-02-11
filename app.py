@@ -492,8 +492,15 @@ async def view_submission(ack, body, logger, client):
             count_msg = f"COUNT: " + count
             moleskine_msg = moleskine
 
-            body_email = make_body(
-                date_msg, ao_msg, q_msg, pax_msg, pax2_msg, fngs_msg, count_msg, moleskine_msg)
+            body_email = date_msg + "\n" + \
+                         ao_msg + "\n" + \
+                         q_msg + "\n" + \
+                         pax_msg + "\n" + \
+                         pax2_msg + "\n" + \
+                         fngs_msg + "\n" + \
+                         count_msg + "\n" + \
+                         moleskine_msg
+            
             sendmail.send(subject=subject, recipient=email_to, body=body_email)
 
             logger.info('\nEmail Sent! \n{}'.format(body_email))
