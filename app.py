@@ -495,10 +495,10 @@ async def view_submission(ack, body, logger, client):
             count_msg = f"COUNT: " + count
             moleskine_msg = moleskine
 
-            body_email = pax_msg + "\r\n" + \
-                         pax2_msg + "\r\n" + \
-                         fngs_msg + "\r\n" + \
-                         count_msg + "\r\n" + \
+            body_email = pax_msg + "\n" + \
+                         pax2_msg + "\n" + \
+                         fngs_msg + "\n" + \
+                         count_msg + "\n" + \
                          moleskine_msg
             
             sendmail.send(subject=subject, recipient=email_to, body=body_email)
