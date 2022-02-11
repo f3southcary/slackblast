@@ -485,6 +485,10 @@ async def view_submission(ack, body, logger, client):
             subject = f"<" + ao_name + ">: " + the_date + " Q'd by " + q_name
 
             tags_msg = f"Tags: " + pax_names
+            
+            if pax2 != '' and pax2 != 'None':
+                tags_msg = tags_msg + ", " + pax2
+            
             pax_msg = f"PAX: " + pax_names
             pax2_msg = f"PAX (not in Slack): " + pax2
             fngs_msg = f"FNGs: " + fngs
