@@ -482,19 +482,16 @@ async def view_submission(ack, body, logger, client):
     try:
         if email_to and email_to != OPTIONAL_INPUT_VALUE and email_to != '':
             logger.info('\nAttempting to send email to: {}\n'.format(email_to))
-            subject = f"Submitted backblast"
+            subject = f"<" + ao_name + ">: " + the_date + " Q'd by " + q_name
 
-            date_msg = f"DATE: " + the_date
-            ao_msg = f"AO: " + (ao_name or '').replace('the', '').title()
-            q_msg = f"Q: " + q_name
+            tags_msg = f"Tags: " + pax_names
             pax_msg = f"PAX: " + pax_names
+            pax2_msg = f"PAX (not in Slack): " + pax2
             fngs_msg = f"FNGs: " + fngs
             count_msg = f"COUNT: " + count
             moleskine_msg = moleskine
 
-            body_email = date_msg + "\n" + \
-                         ao_msg + "\n" + \
-                         q_msg + "\n" + \
+            body_email = tags_msg + "\n" + \
                          pax_msg + "\n" + \
                          pax2_msg + "\n" + \
                          fngs_msg + "\n" + \
