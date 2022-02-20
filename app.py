@@ -484,13 +484,14 @@ async def view_submission(ack, body, logger, client):
             logger.info('\nAttempting to send email to: {}\n'.format(email_to))
             subject = f"[backblasts] [" + ao_name + "] " + the_date + " Q'd by " + q_name
 
-            tags_msg = f"Tags: " + pax_names
+            tags_msg = f"Tags: " + q_name + ", " + pax_names
             
             if pax2 != '' and pax2 != 'None':
                 tags_msg = tags_msg + ", " + pax2
             if fngs != '' and fngs != 'None':
                 tags_msg = tags_msg + ", " + fngs
 
+            q_msg = f"<b>Q:</b> " + q_name
             pax_msg = f"<b>PAX:</b> " + pax_names
             pax2_msg = f"<b>PAX (not in Slack):</b> " + pax2
             fngs_msg = f"<b>FNGs:</b> " + fngs
@@ -498,6 +499,7 @@ async def view_submission(ack, body, logger, client):
             moleskine_msg = moleskine
 
             body_email = tags_msg + "\n" + \
+                         q_msg + "\n" + \
                          pax_msg + "\n" + \
                          pax2_msg + "\n" + \
                          fngs_msg + "\n" + \
