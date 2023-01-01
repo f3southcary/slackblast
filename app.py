@@ -115,6 +115,8 @@ async def get_user_names(array_of_user_ids, logger, client):
 
 @slack_app.command("/slackblast")
 @slack_app.command("/backblast-custom")
+@slack_app.command("/backblast-breezy")
+@slack_app.command("/backblast-azure")
 @slack_app.command("/backblast")
 async def command(ack, body, respond, client, logger):
     await ack()
